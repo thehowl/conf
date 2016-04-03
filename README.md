@@ -1,4 +1,4 @@
-# conf [![GoDoc](https://godoc.org/github.com/thehowl/conf?status.svg)](https://godoc.org/github.com/thehowl/conf)
+# conf [![Build Status](https://travis-ci.org/thehowl/conf.svg?branch=master)](https://travis-ci.org/thehowl/conf) [![GoDoc](https://godoc.org/github.com/thehowl/conf?status.svg)](https://godoc.org/github.com/thehowl/conf)
 
 (yes I am that creative with names)
 
