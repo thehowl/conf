@@ -65,7 +65,7 @@ func BenchmarkEscape(b *testing.B) {
 
 const sampleForUnmarshaling = `
 ; Welcome to hell.
-; As we have to try every single possible value a struct can have, all of this is required.append
+; As we have to try every single possible value a struct can have, all of this is required.
 ; Fuck.
 TestInt=1510591
 TestInt8=-100
@@ -85,6 +85,7 @@ TestFloat64=110.134141223
 TestBool=1
 
 TestString=How much wood would a woodchuck chuck if a woodchuck could chuck wood?
+TestEmpty=
 `
 
 type sampleTest struct {
@@ -106,6 +107,7 @@ type sampleTest struct {
 	TestBool bool
 
 	TestString string
+	TestEmpty  string
 }
 
 func (si sampleTest) check(t *testing.T) {
@@ -127,11 +129,12 @@ func (si sampleTest) check(t *testing.T) {
 
 		si.TestBool == true &&
 
-		si.TestString == "How much wood would a woodchuck chuck if a woodchuck could chuck wood?" {
+		si.TestString == "How much wood would a woodchuck chuck if a woodchuck could chuck wood?" &&
+		si.TestEmpty == "" {
 		t.Log("It surprisingly worked.")
 	} else {
 		t.Log("Nope.")
-		t.Logf("%#v", si)
+		t.Fatalf("%#v", si)
 	}
 }
 
@@ -350,5 +353,24 @@ func TestFullChain(t *testing.T) {
 	MustLoadRaw(&secondary, c)
 	if !reflect.DeepEqual(initial, secondary) {
 		t.Fatalf("Initial struct %#v is not the same as the derivate %#v.", initial, secondary)
+	}
+}
+
+func TestCRLF(t *testing.T) {
+	const w = "Key1=Nice\r\nKey2=Meme"
+	vals := Parse([]byte(w))
+	for _, i := range vals {
+		switch i.Field {
+		case "Key1":
+			if i.Value != "Nice" {
+				t.Fatalf("Expected '%s', got '%s'", "Nice", i.Value)
+			}
+		case "Key2":
+			if i.Value != "Meme" {
+				t.Fatalf("Expected '%s', got '%s'", "Meme", i.Value)
+			}
+		default:
+			t.Fatalf("Unexpected key '%s'", i.Field)
+		}
 	}
 }

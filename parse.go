@@ -52,7 +52,7 @@ func Parse(data []byte) []FieldValue {
 			if fieldName != "" && fieldValue != "" {
 				fvs = append(fvs, FieldValue{
 					Field: fieldName,
-					Value: fieldValue,
+					Value: removeTrailingCR(fieldValue),
 				})
 			}
 			fieldName = ""
@@ -73,8 +73,17 @@ func Parse(data []byte) []FieldValue {
 	if fieldName != "" && fieldValue != "" {
 		fvs = append(fvs, FieldValue{
 			Field: fieldName,
-			Value: fieldValue,
+			Value: removeTrailingCR(fieldValue),
 		})
 	}
 	return fvs
+}
+func removeTrailingCR(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	if s[len(s)-1] == '\r' {
+		return s[:len(s)-1]
+	}
+	return s
 }
