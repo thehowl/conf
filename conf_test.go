@@ -282,11 +282,12 @@ func BenchmarkLoadRaw(b *testing.B) {
 
 type exportTypeTest struct {
 	Name string
-	Age  int `description:"The age of the patient."`
+	Age  int `description:"The age of the patient.\nDescriptions can be multi-line."`
 }
 
 const expectedExportType = `Name=Jack
 ; The age of the patient.
+; Descriptions can be multi-line.
 Age=19
 `
 

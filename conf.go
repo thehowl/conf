@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 // The only custom errors this package will return.
@@ -139,6 +140,7 @@ func exportRaw(fromValue reflect.Value) []byte {
 
 		/* guten */ tag := curfieldType.Tag.Get("description")
 		if tag != "" {
+			tag = strings.Replace(tag, "\n", "\n; ", -1)
 			ret = append(ret, []byte("; "+tag+"\n")...)
 		}
 		ret = append(ret, []byte(Escape(curfieldType.Name)+"="+Escape(fmt.Sprint(curfield.Interface()))+"\n")...)
